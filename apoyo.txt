@@ -1,0 +1,2 @@
+https://www.desarrollolibre.net/blog/codeigniter/quitar-el-indexphp-de-la-url-en-codeigniter
+https://www.youtube.com/watch?v=w7OSE1-8F8s

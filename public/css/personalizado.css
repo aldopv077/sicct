@@ -1,0 +1,57 @@
+.form-neon input[type="radio"],
+.form-neon input[type="checkbox"]{
+    display: none;
+}
+
+.form-neon .radio label,
+.form-neon .check label{
+    color: #424242;
+    padding: 5px 15px 5px 51px;/*padding : arriba, derecha, abajo, izquierda*/
+    display: inline-block;
+    position: relative;
+    font-size: 1.7em;
+    border-radius: 3px;
+    cursor: pointer;
+    
+    /*Transición*/
+    -webkit-transition: all 0.3s ease;
+    -o-transition:all 0.3s ease ;
+    transition: all 0.3s ease;
+}
+
+.form-neon .radio label:hover,
+.form-neon .check label:hover{
+    background: rgba(0,116,217,0.1);
+}
+
+.form-neon .radio label:before,
+.form-neon .check label:before{
+    content: "";
+    width: 17px;
+    height: 17px;
+    display: inline-block;
+    background: none;
+    border:3px solid #424242;;
+    border-radius: 50%;
+    position: absolute;
+    left: 17px;
+    top: 7px;
+}
+
+.form-neon .check label:before{
+    border-radius: 3px;
+}
+
+.form-neon input[type="radio"]:checked +label,
+.form-neon input[type="checkbox"]:checked +label{
+    padding: 5px 15px;
+    background: #424242;
+    border-radius: 2px;
+    color:#fff;
+    
+}
+
+.form-neon input[type="radio"]:checked +label:before,
+.form-neon input[type="checkbox"]:checked +label:before{
+    display: none;
+}
