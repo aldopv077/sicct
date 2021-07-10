@@ -61,6 +61,7 @@ class Productos extends CI_Controller {
             
             if(isset($datos)){
                 $Clave = $datos['txtClave'];
+                $IdEmpresa = $this->session->userdata('Empresa');
                 $Cliente = $datos['cmbCliente'];
                 $TProducto = $datos['cmbTProducto'];
                 $Estado = $datos['cmbEstado'];
@@ -70,7 +71,7 @@ class Productos extends CI_Controller {
                 $Entrega = $datos['dtEntrega'];
                 $Clasificacion = $datos['cmbPara'];
             }
-             $agregar=$this->ModProductos->ingresar($Clave, $Cliente, $TProducto, $Estado, $Piezas, $Sesiones, $Ingreso, $Entrega, $Clasificacion);
+             $agregar=$this->ModProductos->ingresar($Clave, $IdEmpresa, $Cliente, $TProducto, $Estado, $Piezas, $Sesiones, $Ingreso, $Entrega, $Clasificacion);
             
             if($agregar){
                 $Ide = $this->ModProductos->lastId();

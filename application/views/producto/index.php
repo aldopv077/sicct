@@ -72,7 +72,7 @@
 											<?php 
                                                 foreach ($tproducto as $value){
                                             ?>
-                                                <option value="<?php echo $value->IdTproducto?>"><?php echo $value->TipoProducto?></option>
+                                                <option value="<?php echo $value->IdTProducto?>"><?php echo $value->TipoProducto?></option>
                                             <?php        
                                                 }
                                             ?>

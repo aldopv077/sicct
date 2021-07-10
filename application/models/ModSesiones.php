@@ -20,6 +20,9 @@ class ModSesiones extends CI_Model{
     
     //Consulta las tallas numericas dentro de un rango espesificado
     public function tallasnum($inicio, $fin){
+        //echo $inicio.' '.$fin;
+        //exit;
+        
         $query = $this->db->query('SELECT * FROM TblTallas WHERE IdTalla BETWEEN '. $inicio. ' AND '. $fin);
         
         return $query->result();

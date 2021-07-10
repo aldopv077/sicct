@@ -26,6 +26,7 @@ class Talleres extends CI_Controller {
         }else{
            $datos=$this->input->post();
            if(isset($datos)){
+               $IdEmpresa = $this->session->userdata('Empresa');
                $Nombre = $datos['txtNombre'];
                $Paterno = $datos['txtApPaterno'];
                $Materno = $datos['txtApMaterno'];
@@ -33,7 +34,7 @@ class Talleres extends CI_Controller {
                $Telefono = $datos['txtTelefono'];
            }
            
-           $agregar=$this->ModTalleres->ingresar($Nombre, $Paterno, $Materno, $Direccion, $Telefono);
+           $agregar=$this->ModTalleres->ingresar($IdEmpresa, $Nombre, $Paterno, $Materno, $Direccion, $Telefono);
             
                if($agregar){
                 echo '<script> alert("Teller agregado satisfactoriamente");</script>';
@@ -49,7 +50,7 @@ class Talleres extends CI_Controller {
        if($this->session->userdata('is_logued_in') == FALSE){
             redirect('login','refresh');
         }else{
-           $data['contenido'] = "talleres/lista";  // Ruta de la pantalla principal de clientes
+           $data['contenido'] = "talleres/lista";  // Ruta de la pantalla principal de talleres
            $data['taller'] = $this->ModTalleres->lista(); //Busqueda de todos los talleres agregados
            $data['ltaller'] = $this->ModTalleres->lista(); //Busqueda de todos los talleres agregados
            $this->load->view("plantilla",$data); //Manda a llamar a la vista plantilla con los parametros antes mecionados

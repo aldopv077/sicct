@@ -63,7 +63,7 @@
                                             <?php
                                                 $lista = array();
                                                 foreach ($tproducto as $registro) {
-                                                    $lista[$registro->IdTproducto] = $registro->TipoProducto;
+                                                    $lista[$registro->IdTProducto] = $registro->TipoProducto;
                                                 }
                                 
                                                 echo form_dropdown('cmbTProducto',$lista,$value->IdTProducto, 'class="form-control"', 'id="cmbTProducto"');

@@ -27,8 +27,9 @@ class ModProductos extends CI_Model{
     //Lista de los datps del producto a modificar
     public function producto($Id){
         $this->db->select('*');
-        $this->db->where('IdProducto', $Id);
         $this->db->from('TblProducto');
+        $this->db->where('IdProducto', $Id);
+        $this->db->where('IdEmpresa', $this->session->userdata('Empresa'));
         
         $consulta = $this->db->get();
         
@@ -36,11 +37,12 @@ class ModProductos extends CI_Model{
     }
     
     //Ingresa a la BD los datos del corte que acaba de ingresar a la fabrica
-    public function ingresar($Clave, $Cliente, $TProducto, $Estado, $Piezas, $Sesiones, $Ingreso, $Entrega, $Clasificacion){
+    public function ingresar($Clave, $IdEmpresa, $Cliente, $TProducto, $Estado, $Piezas, $Sesiones, $Ingreso, $Entrega, $Clasificacion){
         $arrayDatos = array(
             'Clave' => $Clave,
             'IdCliente' => $Cliente,
             'IdTProducto' => $TProducto,
+            'IdEmpresa' => $IdEmpresa,
             'Estado' => $Estado,
             'Totalpiezas' => $Piezas,
             'NumeroSesiones' => $Sesiones,
@@ -58,13 +60,23 @@ class ModProductos extends CI_Model{
     
     //Lista de los cortes no terminados
     public function lista(){
-        $consulta = $this->db->query('SELECT pr.IdProducto as Id, pr.Clave as Clave, c.Nombre as Cliente, t.TipoProducto as TipoProducto, d.Departamento as Estado, pr.TotalPiezas as PiezasTotales, pr.NumeroSesiones AS Sesiones, pr.Fechaingreso as Ingreso, pr.Fechasalida as Salida, pr.Clasificacion AS Clasificacion, pr.Terminado as Terminado FROM tblproducto as pr INNER JOIN tblclientes as c on pr.IdCliente=c.IdCliente INNER JOIN  tbltipoproducto AS t ON pr.IdTProducto = t.IdTproducto INNER JOIN tbldepartamento as d ON pr.Estado = d.IdDepartamento WHERE pr.Terminado=0');
+
+        $this->db->select('pr.IdProducto as Id, pr.Clave as Clave, c.Nombre as Cliente, t.TipoProducto as TipoProducto, d.Departamento as Estado, pr.TotalPiezas as PiezasTotales, pr.NumeroSesiones AS Sesiones, pr.Fechaingreso as Ingreso, pr.Fechasalida as Salida, pr.Clasificacion AS Clasificacion, pr.Terminado as Terminado');
+        $this->db->from('tblproducto as pr');
+        $this->db->join('tblclientes as c ', ' pr.IdCliente=c.IdCliente');
+        $this->db->join('tbltipoproducto AS t', 'pr.IdTProducto = t.IdTproducto');
+        $this->db->join('tbldepartamento as d','pr.Estado = d.IdDepartamento');
+        $this->db->where('pr.Terminado', 0);
+        $this->db->where('pr.IdEmpresa', $this->session->userdata('Empresa'));
+        
+        $consulta = $this->db->get();
+        //$this->db->query('SELECT pr.IdProducto as Id, pr.Clave as Clave, c.Nombre as Cliente, t.TipoProducto as TipoProducto, d.Departamento as Estado, pr.TotalPiezas as PiezasTotales, pr.NumeroSesiones AS Sesiones, pr.Fechaingreso as Ingreso, pr.Fechasalida as Salida, pr.Clasificacion AS Clasificacion, pr.Terminado as Terminado FROM tblproducto as pr INNER JOIN tblclientes as c on pr.IdCliente=c.IdCliente INNER JOIN  tbltipoproducto AS t ON pr.IdTProducto = t.IdTproducto INNER JOIN tbldepartamento as d ON pr.Estado = d.IdDepartamento WHERE pr.Terminado=0');
         
         return $consulta->result();
     }
     
     
-    //Lista de los cortes no terminados
+    //Busqueda del corte seleccionado
     public function busqueda($Clave){
         $this->db->select("pr.IdProducto as Id, pr.Clave as Clave, c.Nombre as Cliente, t.TipoProducto as TipoProducto, d.Departamento as Estado, pr.TotalPiezas as PiezasTotales, pr.NumeroSesiones AS Sesiones, pr.Fechaingreso as Ingreso, pr.Fechasalida as Salida, pr.Clasificacion AS Clasificacion, pr.Terminado as Terminado");
         $this->db->from("TblProducto as pr");

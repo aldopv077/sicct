@@ -56,6 +56,7 @@ class Clientes extends CI_Controller {
              $datos=$this->input->post();
         
             if(isset($datos)){
+                $IdEmpresa = $this->session->userdata('Empresa');
                 $Nombre = $datos['txtNombre'];
                 $RFC = $datos['txtRFC'];
                 $Telefono = $datos['txtTelefono'];
@@ -82,7 +83,7 @@ class Clientes extends CI_Controller {
             echo $TelContacto.' ';
              exit;*/
              
-            $agregar=$this->ModClientes->ingresar($Nombre, $RFC, $Telefono, $Direccion, $Email, $Contacto, $TelContacto);
+            $agregar=$this->ModClientes->ingresar($IdEmpresa, $Nombre, $RFC, $Telefono, $Direccion, $Email, $Contacto, $TelContacto);
             
             if($agregar){
                 echo '<script> alert("Cliente agregado satisfactoriamente");</script>';

@@ -6,8 +6,9 @@
     }
        
     //Ingresa a la BD los datos de los clientes
-    public function ingresar($Nombre, $Paterno, $Materno, $Direccion, $Telefono){
+    public function ingresar($IdEmpresa, $Nombre, $Paterno, $Materno, $Direccion, $Telefono){
         $arrayDatos = array(
+            'IdEmpresa' => $IdEmpresa,
             'Nombre' => $Nombre,
             'ApPaterno' => $Paterno,
             'ApMaterno' => $Materno,
@@ -24,6 +25,7 @@
         $this->db->select('*');
         $this->db->from('TblTallerExterno');
         $this->db->where('Bloqueado',0);
+        $this->db->where('IdEmpresa', $this->session->userdata('Empresa'));
            
         $consulta = $this->db->get();
            
@@ -34,6 +36,7 @@
         $this->db->select('*');
         $this->db->from('TblTallerExterno');
         $this->db->where('IdExterno', $Id);
+        $this->db->where('IdEmpresa', $this->session->userdata('Empresa'));
            
         $consulta = $this->db->get();
            

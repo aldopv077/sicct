@@ -7,12 +7,12 @@
         }
         
         public function Usuarios(){
-            $query = $this->db->query("SELECT COUNT(IdUsuario) AS Usuarios FROM TblUsuario WHERE bloqueado=0");
+            $query = $this->db->query("SELECT COUNT(IdUsuario) AS Usuarios FROM TblUsuario WHERE bloqueado=0  AND IdEmpresa=".$this->session->userdata('Empresa'));
             return $query->result();
         }
         
         public function Clientes(){
-            $query = $this->db->query("SELECT COUNT(IdCliente) AS Clientes FROM TblClientes WHERE bloqueado=0");
+            $query = $this->db->query("SELECT COUNT(IdCliente) AS Clientes FROM TblClientes WHERE bloqueado=0  AND IdEmpresa=".$this->session->userdata('Empresa'));
             return $query->result();
         }
         
@@ -22,12 +22,12 @@
         }
         
         public function Productos(){
-            $query = $this->db->query("SELECT COUNT(IdProducto) AS Producto FROM TblProducto WHERE Terminado=0");
+            $query = $this->db->query("SELECT COUNT(IdProducto) AS Producto FROM TblProducto WHERE Terminado=0  AND IdEmpresa=".$this->session->userdata('Empresa'));
             return $query->result();
         }
         
         public function Externos(){
-            $query = $this->db->query("SELECT COUNT(IdExterno) AS Taller FROM TblTallerExterno WHERE Bloqueado=0");
+            $query = $this->db->query("SELECT COUNT(IdExterno) AS Taller FROM TblTallerExterno WHERE Bloqueado=0  AND IdEmpresa=".$this->session->userdata('Empresa'));
             return $query->result();
         }
         

@@ -1,0 +1,7 @@
+webhost
+usuario: aldo.pablo70@gmail.com
+pass:    adm73340*
+
+database
+usuario: admin
+pass:	 Adm?73340me*

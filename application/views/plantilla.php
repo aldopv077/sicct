@@ -25,6 +25,11 @@
 
 	<!-- Sweet Alert V8.13.0 JS file-->
 	<script src="<?php echo base_url('public/js/sweetalert2.min.js'); ?>" ></script>  
+	
+    <script type="text/javascript">
+        window.history.forward();
+        function sinVueltaAtras(){ window.history.forward(); }
+    </script>
 
 	<!-- jQuery Custom Content Scroller V3.1.5 -->
 	<link rel="stylesheet" href="<?php echo base_url('public/css/jquery.mCustomScrollbar.css'); ?>">  
@@ -44,10 +49,11 @@
             }
         </script>
 </head>
-<body>
+<body onload="sinVueltaAtras();" onpageshow="if (event.persisted) sinVueltaAtras();" onunload="">
 	<?php
         $Nombre = $this->session->userdata('nombre').' '. $this->session->userdata('paterno').' '. $this->session->userdata('materno');
         $Puesto = $this->session->userdata('pueston');
+		$Rol = $this->session->userdata('rol');
     ?>
 	<!-- Main container -->
 	<main class="full-box main-container">
@@ -91,6 +97,11 @@
 						<li>
 							<a href="<?php echo base_url('Produccion/index'); ?>" class="nav-btn-submenu"><i class="fas fa-cogs fa-fw"></i> &nbsp; Producción</a>
 						</li>
+						<?php if($Rol == 'SuperAdmin'){?>
+							<li>
+								<a href="<?php echo base_url('Empresas/index')?>"><i class="fas fa-store-alt fa-fw"></i> &nbsp; Empresa</a>
+							</li>
+						<?php }?>
 					</ul>
 				</nav>
 			</div>

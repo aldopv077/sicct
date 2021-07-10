@@ -58,6 +58,7 @@ class Usuarios extends CI_Controller {
             $datos=$this->input->post();
         
             if(isset($datos)){
+                $Empresa = $this->session->userdata('Empresa');
                 $Nombre = $datos['txtNombre'];
                 $Paterno = $datos['txtPaterno'];
                 $Materno = $datos['txtMaterno'];
@@ -70,7 +71,7 @@ class Usuarios extends CI_Controller {
                 $Pass2 = $datos['txtpass2'];
                 $Rol = $datos['cmbRol'];
             
-                $Id=trim($Id);
+                $Id=trim($Empresa);
                 $Nombre=trim($Nombre);
                 $Paterno=trim($Paterno);
                 $Materno=trim($Materno);
@@ -80,7 +81,7 @@ class Usuarios extends CI_Controller {
                 $Pass=trim($Pass);
             }
         
-            $agregar = $this->ModUsuarios->AgregarUsuario($Nombre,$Paterno, $Materno,$Telefono,$Direccion,$Puesto,$Usuario,$Email, $Pass, $Rol);
+            $agregar = $this->ModUsuarios->AgregarUsuario($Id,$Nombre,$Paterno, $Materno,$Telefono,$Direccion,$Puesto,$Usuario,$Email, $Pass, $Rol);
         
             if($agregar){
                 echo '<script> alert("Usuario agregado satisfactoriamente");</script>';

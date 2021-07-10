@@ -13,7 +13,7 @@
 			<!-- Page header -->
 			<div class="full-box page-header">
 				<h3 class="text-left">
-					<i class="fab fa-dashcube fa-fw"></i> &nbsp; Nombre de la empresa
+					<i class="fab fa-dashcube fa-fw"></i> &nbsp; <?php echo $this->session->userdata('NombreEmp')?>
 				</h3>
 				<p class="text-justify">
 					

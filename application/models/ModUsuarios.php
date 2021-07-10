@@ -7,10 +7,11 @@ class ModUsuarios extends CI_Model{
     } 
     
     //Agregar los datos del usuario a la BD
-    public function AgregarUsuario($Nombre,$Paterno, $Materno,$Telefono,$Direccion,$Puesto,$Usuario,$Email, $Pass, $Rol){
+    public function AgregarUsuario($IdEmpresa, $Nombre,$Paterno, $Materno,$Telefono,$Direccion,$Puesto,$Usuario,$Email, $Pass, $Rol){
         
         $arrayDatos = array(
             'IdPuesto' => $Puesto,
+            'IdEmpresa' => $IdEmpresa,
             'Nombre' => $Nombre,
             'ApPaterno' => $Paterno,
             'ApMaterno' => $Materno,
@@ -29,8 +30,14 @@ class ModUsuarios extends CI_Model{
     
     //Consulta todos los datos de los usuarios
     public function selUsuarios(){
-        $query = $this->db->query('SELECT u.IdUsuario, u.Nombre, u.ApPaterno, u.ApMaterno, u.Telefono, u.Correo, u.Direccion, p.Puesto FROM TblUsuario As u INNER JOIN TblPuesto As p ON u.IdPuesto = p.IdPuesto WHERE u.Bloqueado=0');
+        $this->db->select('u.IdUsuario, u.Nombre, u.ApPaterno, u.ApMaterno, u.Telefono, u.Correo, u.Direccion, p.Puesto');
+        $this->db->from('TblUsuario As u ');
+        $this->db->join('TblPuesto As p' ,'u.IdPuesto = p.IdPuesto');
+        $this->db->where('u.Bloqueado', 0);
+        $this->db->where('IdEmpresa', $this->session->userdata('Empresa'));
         
+        $query = $this->db->get();
+
         return $query->result();
     }
     
@@ -48,8 +55,15 @@ class ModUsuarios extends CI_Model{
     
     //Consulta los datos del usuario para mostrarlos en el formulario de modificación.
     public function frmModificar($Id){
-        $query = $this->db->query('SELECT u.IdUsuario, u.Nombre, u.ApPaterno, u.ApMaterno, u.Telefono, u.Correo, u.Direccion, p.Puesto,u.IdPuesto, u.IdRol, r.Rol FROM TblUsuario As u INNER JOIN TblPuesto As p ON u.IdPuesto = p.IdPuesto INNER JOIN TblRoles AS r ON u.IdRol = r.IdRol WHERE u.IdUsuario='.$Id);
+        $this->db->select('u.IdUsuario, u.Nombre, u.ApPaterno, u.ApMaterno, u.Telefono, u.Correo, u.Direccion, p.Puesto,u.IdPuesto, u.IdRol, r.Rol');
+        $this->db->from('TblUsuario As u ');
+        $this->db->join('TblPuesto As p' ,'u.IdPuesto = p.IdPuesto');
+        $this->db->join('TblRoles AS r', 'u.IdRol = r.IdRol');
+        $this->db->where('IdUsuario', $Id);
         
+       // $query = $this->db->query('SELECT u.IdUsuario, u.Nombre, u.ApPaterno, u.ApMaterno, u.Telefono, u.Correo, u.Direccion, p.Puesto,u.IdPuesto, u.IdRol, r.Rol FROM TblUsuario As u INNER JOIN TblPuesto As p ON u.IdPuesto = p.IdPuesto INNER JOIN TblRoles AS r ON u.IdRol = r.IdRol WHERE u.IdUsuario='.$Id);
+        $query = $this->db->get(); 
+
         return $query->result();
     }
     

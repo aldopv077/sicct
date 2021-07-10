@@ -38,29 +38,14 @@ class Login extends CI_Controller{
 	                    'perfil'	   =>		$datuser->IdRol,
 	                    'username' 	   => 		$datuser->Usuario,
                         'puesto'       =>       $datuser->IdPuesto,
-                        'pueston'      =>       $datuser->Puesto
+                        'pueston'      =>       $datuser->Puesto,
+                        'rol'          =>       $datuser->Rol,
+                        'Empresa'      =>       $datuser->Empresa,
+                        'NombreEmp'    =>       $datuser->EmpresaNom
                     );
-                    
-                    //echo $data['Id'].' ';
-                    //echo $data['nombre'].' ';
-                    //echo $data['paterno'].' ';
-                    //echo $data['materno'].' ';
-                    //echo $data['perfil'].' ';
-                    //echo $data['username'].' ';
-                    //echo $data['puesto'].' ';
-                    //echo $data['pueston'];
-
-                    //exit;
 
                     $this->session->set_userdata($data); // Se crea la sesión
-                
-                    $data['contenido'] ="Inicio/index";
-                    $data['user'] = $this->ModInicio->Usuarios();
-                    $data['client'] = $this->ModInicio->Clientes();
-                    $data['producto'] = $this->ModInicio->Productos();
-                    $data['accesorio'] = $this->ModInicio->Accesorios();
-                    $data['taller'] = $this->ModInicio->Externos();
-                    $this->load->view('plantilla',$data);
+                    $this->very_session();
                 
                 }else{
                     echo '<script> alert("Usuario o contraseña incorrectos");</script>';
@@ -73,6 +58,21 @@ class Login extends CI_Controller{
             }
         }else{
             redirect('login');
+        }
+    }
+    
+    public function very_session(){
+        
+        if($this->session->userdata('is_logued_in') == FALSE){
+            redirect('login','refresh');
+        }else{
+            $data['contenido'] ="Inicio/index";
+            $data['user'] = $this->ModInicio->Usuarios();
+            $data['client'] = $this->ModInicio->Clientes();
+            $data['producto'] = $this->ModInicio->Productos();
+            $data['accesorio'] = $this->ModInicio->Accesorios();
+            $data['taller'] = $this->ModInicio->Externos();
+            $this->load->view('plantilla',$data);
         }
     }
     
