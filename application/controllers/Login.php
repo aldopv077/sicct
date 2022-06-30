@@ -66,13 +66,47 @@ class Login extends CI_Controller{
         if($this->session->userdata('is_logued_in') == FALSE){
             redirect('login','refresh');
         }else{
-            $data['contenido'] ="Inicio/index";
-            $data['user'] = $this->ModInicio->Usuarios();
-            $data['client'] = $this->ModInicio->Clientes();
-            $data['producto'] = $this->ModInicio->Productos();
-            $data['accesorio'] = $this->ModInicio->Accesorios();
-            $data['taller'] = $this->ModInicio->Externos();
-            $this->load->view('plantilla',$data);
+            $Rol = $this->session->userdata('rol');
+            
+            switch($Rol){
+                case "SuperAdmin":
+                    $data['contenido'] ="Inicio/indexadmin";
+                    $data['user'] = $this->ModInicio->Usuarios();
+                    $data['empresas'] = $this->ModInicio->Empresas();
+                    $this->load->view('plantilladmin',$data);
+                break;
+                case "Supervisor General":
+                    $data['contenido'] ="Inicio/indexsup";
+                    $this->load->view('plantillasup',$data);
+                break;
+                default:
+                    $data['contenido'] ="Inicio/index";
+                    $data['user'] = $this->ModInicio->Usuarios();
+                    $data['client'] = $this->ModInicio->Clientes();
+                    $data['producto'] = $this->ModInicio->Productos();
+                    $data['accesorio'] = $this->ModInicio->Accesorios();
+                    $data['taller'] = $this->ModInicio->Externos();
+                    $this->load->view('plantilla',$data);
+                break;
+
+            }
+
+            
+           /* if($Rol == "SuperAdmin"){
+                $data['contenido'] ="Inicio/indexadmin";
+                $data['user'] = $this->ModInicio->Usuarios();
+                $data['empresas'] = $this->ModInicio->Empresas();
+                $this->load->view('plantilladmin',$data);
+            }else{
+                $data['contenido'] ="Inicio/index";
+                $data['user'] = $this->ModInicio->Usuarios();
+                $data['client'] = $this->ModInicio->Clientes();
+                $data['producto'] = $this->ModInicio->Productos();
+                $data['accesorio'] = $this->ModInicio->Accesorios();
+                $data['taller'] = $this->ModInicio->Externos();
+                $this->load->view('plantilla',$data);
+            }*/
+            
         }
     }
     

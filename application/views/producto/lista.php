@@ -72,9 +72,9 @@
 								<th>SECCIONES ENTREGADAS</th>
 								<th>SECCIONES FALTANTES</th>
 								<th>ACTUALIZAR</th>
-								<th>LLNAR SECCIÓN</th>
+								<th>LLENAR SECCIÓN</th>
 								<th>VER ESTADO DE SECCIONES</th>								
-								<th>ELIMINAR</th>
+								<th>TERMINADO</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -92,8 +92,8 @@
 								    <th> <?php echo $value->Ingreso?> </th>
 								    <th> <?php echo $value->Salida?> </th>
 								    <th> <?php echo $value->Sesiones?> </th>
-								    <th> 00 </th>
-								    <th> 00 </th>
+								    <th> <?php $controller->seccTerm($value->Id)?> </th>
+								    <th> <?php $controller->seccFalt($value->Id)?> </th>
 								    <td>
 									    <a href="<?php echo base_url('Productos/modificar/').$value->Id; ?>" class="btn btn-success">
 	  									    <i class="fas fa-sync-alt"></i>	
@@ -111,8 +111,6 @@
 								    </td>
 								    <td>
 								         <a onclick="if(confirma() === false) return false" href="<?php echo base_url('Productos/eliminar/').$value->Id;?>" class="btn btn-warning"> <i class="far fa-trash-alt"></i>  </a>
-									    
-
 								    </td>
 							    </tr>
                                 

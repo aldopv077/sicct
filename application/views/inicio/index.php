@@ -42,70 +42,87 @@
                         $Accesorio = $acc->Accesorio;
                     }
                 ?>
-				<a href="<?php echo base_url('Usuarios/index');?>" class="tile">
-					<div class="tile-tittle">Usuarios</div>
-					<div class="tile-icon">
-						<i class="fas fa-user-secret fa-fw"></i>
-						<p><?php echo $usuario.' registrados'?></p>
-					</div>
-				</a>
+				<?php if($this->session->userdata('rol') == 'Administrador'){?>
+					<a href="<?php echo base_url('Usuarios/index');?>" class="tile">
+						<div class="tile-tittle">Usuarios</div>
+						<div class="tile-icon">
+							<i class="fas fa-user-secret fa-fw"></i>
+							<p><?php echo $usuario.' registrados'?></p>
+						</div>
+					</a>
 
-				<a href="<?php echo base_url('Clientes/index'); ?>" class="tile">
-					<div class="tile-tittle">Clientes</div>
-					<div class="tile-icon">
-						<i class="fas fa-users fa-fw"></i>
-						<p><?php echo $cliente.' Registrados'?></p>
-					</div>
-				</a>
+					<a href="<?php echo base_url('Clientes/index'); ?>" class="tile">
+						<div class="tile-tittle">Clientes</div>
+						<div class="tile-icon">
+							<i class="fas fa-users fa-fw"></i>
+							<p><?php echo $cliente.' Registrados'?></p>
+						</div>
+					</a>
 
-				<!--<a href="item-list.html" class="tile">
-					<div class="tile-tittle">Departamentos</div>
-					<div class="tile-icon">
-						<i class="fas fa-sitemap fa-fw"></i>
-						<p>9 Registrados</p>
-					</div>
-				</a>
+					<!--<a href="item-list.html" class="tile">
+						<div class="tile-tittle">Departamentos</div>
+						<div class="tile-icon">
+							<i class="fas fa-sitemap fa-fw"></i>
+							<p>9 Registrados</p>
+						</div>
+					</a>
 
-				<a href="item-list.html" class="tile">
-					<div class="tile-tittle">Puestos</div>
-					<div class="tile-icon">
-						<i class="fas fa-archive fa-fw"></i>
-						<p>9 Registrados</p>
-					</div>
-				</a> -->
-                            
-				<a href="<?php echo base_url('Productos/index'); ?>" class="tile">
-					<div class="tile-tittle">Producto</div>
-					<div class="tile-icon">
-						<i class="fas fa-tshirt fa-fw"></i>
-						<p><?php echo $Prod.' En producción'?></p>
-					</div>
-				</a>
-                            
-				<a href="<?php echo base_url('Talleres/index'); ?>" class="tile">
-					<div class="tile-tittle">Trabajadores Externos</div>
-					<div class="tile-icon">
-						<i class="fas fa-user-clock fa-fw"></i>
-						<p><?php echo $Taller.' registrados'?></p>
-					</div>
-				</a>
-                            
-				<a href="<?php echo base_url('Accesorios/index');?>" class="tile">
-					<div class="tile-tittle">Accesorios</div>
-					<div class="tile-icon">
-						<i class="fas fa-clipboard-list fa-fw"></i>
-						<p><?php echo $Accesorio.' registrados'?></p>
-					</div>
-				</a>
-                            
-				<a href="<?php echo base_url('Produccion/index')?>" class="tile">
-					<div class="tile-tittle">Producción</div>
-					<div class="tile-icon">
-						<i class="fas fa-cogs fa-fw"></i>
-						<p> Registrar producción </p>
-					</div>
-				</a>
+					<a href="item-list.html" class="tile">
+						<div class="tile-tittle">Puestos</div>
+						<div class="tile-icon">
+							<i class="fas fa-archive fa-fw"></i>
+							<p>9 Registrados</p>
+						</div>
+					</a> -->
 								
+					<a href="<?php echo base_url('Productos/index'); ?>" class="tile">
+						<div class="tile-tittle">Producto</div>
+						<div class="tile-icon">
+							<i class="fas fa-tshirt fa-fw"></i>
+							<p><?php echo $Prod.' En producción'?></p>
+						</div>
+					</a>
+								
+					<a href="<?php echo base_url('Talleres/index'); ?>" class="tile">
+						<div class="tile-tittle">Trabajadores Externos</div>
+						<div class="tile-icon">
+							<i class="fas fa-user-clock fa-fw"></i>
+							<p><?php echo $Taller.' registrados'?></p>
+						</div>
+					</a>
+								
+					<a href="<?php echo base_url('Accesorios/index');?>" class="tile">
+						<div class="tile-tittle">Accesorios</div>
+						<div class="tile-icon">
+							<i class="fas fa-clipboard-list fa-fw"></i>
+							<p><?php echo $Accesorio.' registrados'?></p>
+						</div>
+					</a>
+								
+					<a href="<?php echo base_url('Produccion/index')?>" class="tile">
+						<div class="tile-tittle">Producción</div>
+						<div class="tile-icon">
+							<i class="fas fa-cogs fa-fw"></i>
+							<p> Registrar producción </p>
+						</div>
+					</a>
+
+					<a href="<?php echo base_url('ProduccionInt/index')?>" class="tile">
+						<div class="tile-tittle">Producción Interna</div>
+						<div class="tile-icon">
+						<i class="far fa-object-group"></i>
+							<p> Producción por empleado </p>
+						</div>
+					</a>
+				<?php }else{?>
+					<a href="<?php echo base_url('ProduccionInt/index')?>" class="tile">
+						<div class="tile-tittle">Producción Interna</div>
+						<div class="tile-icon">
+						<i class="far fa-object-group"></i>
+							<p> Producción por empleado </p>
+						</div>
+					</a>
+				<?php }?>
 			</div>
 			
 <script type="text/javascript">

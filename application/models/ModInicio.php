@@ -35,4 +35,10 @@
             $query = $this->db->query("SELECT COUNT(IdAccesorio) AS Accesorio FROM TblAccesorios");
             return $query->result();
         }
+
+        public function Empresas(){
+
+            $query = $this->db->query("SELECT COUNT(IdEmpresa) AS Empresa FROM TblEmpresas WHERE IdEmpresa != '". $this->session->userdata('Empresa')."'");
+            return $query->result();
+        }
     }

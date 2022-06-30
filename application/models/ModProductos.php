@@ -62,10 +62,10 @@ class ModProductos extends CI_Model{
     public function lista(){
 
         $this->db->select('pr.IdProducto as Id, pr.Clave as Clave, c.Nombre as Cliente, t.TipoProducto as TipoProducto, d.Departamento as Estado, pr.TotalPiezas as PiezasTotales, pr.NumeroSesiones AS Sesiones, pr.Fechaingreso as Ingreso, pr.Fechasalida as Salida, pr.Clasificacion AS Clasificacion, pr.Terminado as Terminado');
-        $this->db->from('tblproducto as pr');
-        $this->db->join('tblclientes as c ', ' pr.IdCliente=c.IdCliente');
-        $this->db->join('tbltipoproducto AS t', 'pr.IdTProducto = t.IdTproducto');
-        $this->db->join('tbldepartamento as d','pr.Estado = d.IdDepartamento');
+        $this->db->from('TblProducto as pr');
+        $this->db->join('TblClientes as c ', ' pr.IdCliente=c.IdCliente');
+        $this->db->join('TblTipoproducto AS t', 'pr.IdTProducto = t.IdTproducto');
+        $this->db->join('TblDepartamento as d','pr.Estado = d.IdDepartamento');
         $this->db->where('pr.Terminado', 0);
         $this->db->where('pr.IdEmpresa', $this->session->userdata('Empresa'));
         
@@ -74,7 +74,28 @@ class ModProductos extends CI_Model{
         
         return $consulta->result();
     }
-    
+
+    //Conteo de los productos de la empresa
+    public function conteoProductos(){
+        /*$this->db->select("IdProducto");
+        $this->db->from("TblProducto");
+        $this->db->where('IdEmpresa', $this->session->userdata('Empresa'));
+        $this->db->count_all_results();*/
+        
+        $consulta = $this->db->query("SELECT COUNT(IdProducto) FROM TblProducto WHERE IdEmpresa =".$this->session->userdata('Empresa'));
+        $consulta = $this->db->get();
+        return $consulta->result();
+    }
+
+    //Modificación del estado del corte
+    public function modEstado($Id, $Estado){
+        $arrayDatos = array(
+            'Estado' => $Estado
+        );
+
+        $this->db->where('IdProducto', $Id);
+        $this->db->update('TblProducto', $arrayDatos);
+    }
     
     //Busqueda del corte seleccionado
     public function busqueda($Clave){

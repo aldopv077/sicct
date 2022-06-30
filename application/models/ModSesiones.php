@@ -18,6 +18,16 @@ class ModSesiones extends CI_Model{
         return $consulta->result();
     }  
     
+    public function ConsultaSesion($IdProducto, $IdSesion){
+        $this->db->select('*');
+        $this->db->from('TblSesiones');
+        $this->db->where('IdProducto', $IdProducto);
+        $this->db->where('IdSesion', $IdSesion);
+
+        $consulta = $this->db->get();
+        return $consulta->result();
+    }
+
     //Consulta las tallas numericas dentro de un rango espesificado
     public function tallasnum($inicio, $fin){
         //echo $inicio.' '.$fin;
@@ -30,7 +40,7 @@ class ModSesiones extends CI_Model{
     }
     
     //Inserta las sesión seleccionada con los datos generales de ésta
-    public function ingresarSesion($Sesion,$Producto,$Taller,$Estado,$Piezas,$Fecha,$Entrega){
+    public function ingresarSesion($Sesion,$Producto,$Taller,$Estado,$Piezas,$Fecha,$Entrega,$mat){
         $arrayDatos = array(
             'IdSesion' => $Sesion,
             'IdProducto' => $Producto,
@@ -38,7 +48,8 @@ class ModSesiones extends CI_Model{
             'Estado' => $Estado,
             'Cantidad' => $Piezas,
             'FechaInicio' => $Fecha,
-            'FechaProgramada' =>$Entrega
+            'FechaProgramada' =>$Entrega,
+            'Matriz' => $mat
         );
         
         $this->db->insert('TblSesiones', $arrayDatos);
@@ -76,16 +87,48 @@ class ModSesiones extends CI_Model{
     }
     
     public function lista($Id){
-        $query = $this->db->query("SELECT s.IdSesion As Id, p.IdProducto AS IdProducto, p.Clave AS Clave, s.Estado AS Estado, p.Clasificacion AS Clasificacion, tp.TipoProducto AS Producto, c.Nombre AS Cliente, s.Cantidad AS Piezas, s.PiezasHechas AS Avance, s.FechaInicio AS Inicio, s.FechaProgramada AS Fin, ta.IdExterno AS Taller,ta.Nombre AS Nombre, ta.ApPaterno AS Paterno, ta.ApMaterno AS Materno FROM tblsesiones AS s INNER JOIN tblproducto AS p ON s.IdProducto=p.IdProducto INNER JOIN tblclientes As c ON c.IdCliente=p.IdCliente INNER JOIN tbltipoproducto AS tp ON tp.IdTProducto = p.IdTProducto INNER JOIN tbltallerexterno AS ta ON s.IdTaller=ta.IdExterno WHERE p.Clave = '".$Id."' ORDER BY s.IdSesion asc");
-        
+        //$query = $this->db->query("SELECT s.IdSesion As Id, p.IdProducto AS IdProducto, p.Clave AS Clave, s.Estado AS Estado, p.Clasificacion AS Clasificacion, tp.TipoProducto AS Producto, c.Nombre AS Cliente, s.Cantidad AS Piezas, s.PiezasHechas AS Avance, s.FechaInicio AS Inicio, s.FechaProgramada AS Fin, ta.IdExterno AS Taller,ta.Nombre AS Nombre, ta.ApPaterno AS Paterno, ta.ApMaterno AS Materno FROM tblsesiones AS s INNER JOIN tblproducto AS p ON s.IdProducto=p.IdProducto INNER JOIN tblclientes As c ON c.IdCliente=p.IdCliente INNER JOIN tbltipoproducto AS tp ON tp.IdTProducto = p.IdTProducto INNER JOIN tbltallerexterno AS ta ON s.IdTaller=ta.IdExterno WHERE p.Clave = '".$Id."' ORDER BY s.IdSesion asc");
+       
+        $this->db->select("s.IdSesion As Id, p.IdProducto AS IdProducto, p.Clave AS Clave, s.Estado AS Estado, p.Clasificacion AS Clasificacion, tp.TipoProducto AS Producto, c.Nombre AS Cliente, s.Cantidad AS Piezas, s.PiezasHechas AS Avance, s.FechaInicio AS Inicio, s.FechaProgramada AS Fin, ta.IdExterno AS Taller,ta.Nombre AS Nombre, ta.ApPaterno AS Paterno, ta.ApMaterno AS Materno");
+        $this->db->from("TblSesiones AS s");
+        $this->db->join("TblProducto AS p", "s.IdProducto=p.IdProducto");
+        $this->db->join("TblClientes As c","c.IdCliente=p.IdCliente");
+        $this->db->join("TblTipoProducto AS tp", "tp.IdTProducto = p.IdTProducto");
+        $this->db->join("TblTallerExterno AS ta", "s.IdTaller=ta.IdExterno");
+        $this->db->where("p.Clave", $Id);
+        $this->db->or_where('p.IdProducto', $Id);
+
+        $query = $this->db->get();
         return $query->result();
     }
+
     
-   public function eliminar($Id){
+    //Conteo de Sesiones terminadas
+    public function SesionesTerminadas($Id){
+       /* $this->db->select("Estado");
+        $this->db->from("TblSesiones");
+        $this->db->where("IdProducto", $Id);
+        $this->db->where("Estado", "Terminado");
+        $this->db->count_all_results();
+        */
+
+        $consulta = $this->db->query("SELECT COUNT(Estado) AS Estado FROM TblSesiones WHERE Estado = 'Terminado' AND IdProducto = ". $Id);
+        return $consulta->result();
+    }
+
+     //Conteo de Sesiones Faltantes
+     public function SesionesFaltantes($Id){
+ 
+         $consulta = $this->db->query("SELECT COUNT(Estado) AS Estado FROM TblSesiones WHERE Estado <> 'Terminado' AND IdProducto = ". $Id);
+         return $consulta->result();
+     }
+    
+   public function eliminar($IdProducto, $Id){
        $arrayDatos = array( 
             'Estado' => "Terminado");
         
         $this->db->where('IdSesion',$Id);
+        $this->db->where('IdProducto', $IdProducto);
         $this->db->update('TblSesiones', $arrayDatos);
     } 
     
@@ -166,15 +209,28 @@ class ModSesiones extends CI_Model{
         return $consulta->result();
     }
     
-    public function Avance($Sesion, $Producto, $Pzas, $Fecha){
+    public function Avance($Sesion, $Taller, $Producto, $Pzas, $Fecha){
         $data = array(
             'IdSesion' => $Sesion,
             'IdProducto' => $Producto,
+            'IdExterno' => $Taller,
             'Produccion' => $Pzas,
             'Fecha' => $Fecha
         );
         
         $this->db->insert('TblProduccion', $data);
         return true;
+    }
+
+    public function Historial($IdProd, $Id){
+        $this->db->select('prod.Clave AS Clave, pr.IdSesion as Sesion, ext.Nombre, ext.ApPaterno as Paterno, ext.ApMaterno As Materno, pr.Produccion As Produccion, pr.Fecha As Fecha');
+        $this->db->from('TblProduccion as pr ');
+        $this->db->join('TblProducto as prod', 'pr.IdProducto = prod.IdProducto');
+        $this->db->join('TblTallerExterno as ext', 'pr.IdExterno = ext.IdExterno');
+        $this->db->where('pr.IdProducto', $IdProd);
+        $this->db->where('pr.IdSesion', $Id);
+        
+        $consulta = $this->db->get();
+        return $consulta->result();
     }
 }

@@ -60,6 +60,9 @@ class Sesiones extends CI_Controller {
                 $data['contenido'] = "sesiones/lista"; 
                 $data['lista'] = $this->ModSesiones->lista($Id);
                 $this->load->view("plantilla",$data); 
+            }else{
+                $data['contenido'] = "sesiones/lista"; 
+                $this->load->view("plantilla",$data); 
             }
         }
     }
@@ -123,6 +126,19 @@ class Sesiones extends CI_Controller {
                 $TPiezas = $datos['txtTPiezas'];
                 $Entrega = $datos['dtEntrega'];
                 $Clasificacion = $datos['txtClasificacion'];
+
+                $list = explode(' ', $Taller);
+                foreach($list as $value=>$Taller){
+                    $Matriz=$list[2];
+                    $IdTaller=$list[0];
+                }
+    
+                //echo $Matriz; exit;
+                if($Matriz == 'Matríz'){
+                    $mat = 1;
+                }else{
+                    $mat = 0;
+                }
                 
                 //TblAccesorioSesion
                 if(!empty($datos['chbAccesorios'])){
@@ -164,8 +180,8 @@ class Sesiones extends CI_Controller {
             
             //echo 'Sesion: '.$Sesion. ' Producto: '.$IdProducto.' Estado: '.$Estado.' Piezas: '.$TPiezas. ' Fecha: '.$Fecha. ' Clasificacion: '.$Clasificacion;
             //exit;
-            
-            $agregar = $this->ModSesiones->ingresarSesion($Sesion, $IdProducto, $Taller,$Estado, $TPiezas, $Fecha, $Entrega);
+           
+            $agregar = $this->ModSesiones->ingresarSesion($Sesion, $IdProducto, $IdTaller, $Estado, $TPiezas, $Fecha, $Entrega, $mat);
         
             if($agregar){    
                 echo '<script> alert("Sesion agregada satisfactoriamente");</script>';
@@ -197,6 +213,18 @@ class Sesiones extends CI_Controller {
                 $Clave = $datos['txtClave'];
                 
                 $cambioAcc = $datos['rbAccesorios'];
+
+                $list = explode(' ', $Taller);
+                foreach($list as $value=>$Taller){
+                    $Matriz=$list[2];
+                    $IdTaller=$list[0];
+                }
+    
+                if($Matriz == 'Matríz'){
+                    $mat = 1;
+                }else{
+                    $mat = 0;
+                }
                 
                 if($cambioAcc == 'Si'){
                     //TblAccesorios
@@ -249,7 +277,7 @@ class Sesiones extends CI_Controller {
                 }
                 }
                 
-                $modificar = $this->ModSesiones->updateSesion($Sesion, $IdProducto, $Taller, $Estado, $TPiezas, $Pzas,$Entrega);
+                $modificar = $this->ModSesiones->updateSesion($Sesion, $IdProducto, $IdTaller, $Estado, $TPiezas, $Pzas,$Entrega);
                 
                 if($modificar){    
                     echo '<script> alert("Sesion modificada satisfactoriamente");</script>';
@@ -262,13 +290,25 @@ class Sesiones extends CI_Controller {
         
     }
     
-    public function eliminar($Id){
+    public function eliminar($IdProducto, $Id){
         if($this->session->userdata('is_logued_in') == FALSE){
             redirect('login','refresh');
         }else{
-            if($Id != NULL){
-                $this->ModSesiones->Eliminar($Id);
-                redirect('Sesiones/lista');
+            if($Id != NULL && $IdProducto != NULL){
+                $sesion = $this->ModSesiones->ConsultaSesion($IdProducto, $Id);
+
+                foreach($sesion as $value){
+                    $CantTotal = $value->Cantidad;
+                    $CantHecha = $value->PiezasHechas;
+                }
+
+                if($CantTotal != $CantHecha){
+                    echo '<script> alert("La CANTIDAD TOTAL es DIFERENTE a la CANTIDAD HECHA"); </script>';
+                    redirect('Sesiones/lista/'.$IdProducto, 'refresh');
+                }
+                
+                $this->ModSesiones->Eliminar($IdProducto, $Id);
+                redirect('Sesiones/lista/'.$IdProducto, 'refresh');
             }
         }
     }
@@ -291,35 +331,73 @@ class Sesiones extends CI_Controller {
         }
     }
     
+
+    //Ingresa las piesas entregadas
     public function avance(){
-        $Fecha=date('Y-m-d');
-        
-        
-        $IdSesion = $_POST['txtSesion'];
-        $IdProducto = $_POST['txtProducto'];
-        $Hechas = $_POST['txtHechas'];
-        $Entrega = $_POST['txtEntrega'];
-        $Estado = $_POST['txtEstado'];
-        $Taller = $_POST['txtTaller'];
-        $Avance = $_POST['txtavance'];
-        $Piezas = $_POST['txtTPiezas'];
-        $Clave = $_POST['txtClave'];
-        
-        for($x=0; $x < count($Hechas);$x++){
-            $AvanceTotal = $Hechas[$x] + $Avance[$x];
+        if($this->session->userdata('is_logued_in') == FALSE){
+            redirect('login','refresh');
+        }else{
+            $Fecha=date('Y-m-d');
             
-            //echo 'Sesión: '. $IdSesion[$x].' Avance: '.$Avance[$x].' Pzas Hechas hasta hoy: '.$Hechas[$x].' Pzas Hechas + Avance Actual: '. $AvanceTotal;
-            //echo '<br>';
             
-            $Avan = $this->ModSesiones->Avance($IdSesion[$x], $IdProducto[$x], $Avance[$x], $Fecha);
-            $Total = $this->ModSesiones->updateSesion($IdSesion[$x], $IdProducto[$x], $Taller[$x], $Estado[$x],$Piezas[$x], $AvanceTotal, $Entrega[$x]);
-        }
-        
-        if($Avan && $Total){
-            echo '<script> alert("Piezas agregadas satisfactoriamente");</script>';
+            $IdSesion = $_POST['txtSesion'];
+            $IdProducto = $_POST['txtProducto'];
+            $Hechas = $_POST['txtHechas'];
+            $Entrega = $_POST['txtEntrega'];
+            $Estado = $_POST['txtEstado'];
+            $Taller = $_POST['txtTaller'];
+            $Avance = $_POST['txtavance'];
+            $Piezas = $_POST['txtTPiezas'];
+            $Clave = $_POST['txtClave'];
+            $IdExterno = $_POST['txtTaller'];
             
-            redirect('Sesiones/lista/'.$Clave);
+            for($x=0; $x < count($Hechas);$x++){
+                $AvanceTotal = $Hechas[$x] + $Avance[$x];
+                
+                //echo 'Sesión: '. $IdSesion[$x].' Avance: '.$Avance[$x].' Pzas Hechas hasta hoy: '.$Hechas[$x].' Pzas Hechas + Avance Actual: '. $AvanceTotal;
+                //echo '<br>';
+                //exit;
+
+                $Avan = $this->ModSesiones->Avance($IdSesion[$x], $IdExterno[$x], $IdProducto[$x], $Avance[$x], $Fecha);
+                $Total = $this->ModSesiones->updateSesion($IdSesion[$x], $IdProducto[$x], $Taller[$x], $Estado[$x],$Piezas[$x], $AvanceTotal, $Entrega[$x]);
+                
+                $sesion = $this->ModSesiones->ConsultaSesion($IdProducto[$x], $IdSesion[$x]);
+                
+                foreach($sesion as $value){
+                    $CantTotal = $value->Cantidad;
+                    $CantHecha = $value->PiezasHechas;
+                }
+
+                if($CantTotal == $CantHecha){
+                    $this->ModSesiones->Eliminar($IdProducto[$x], $IdSesion[$x]);
+                    echo '<script> alert("Sesión:'.$IdSesion[$x].' marcada como terminada");</script>';
+                }                
+            }
+            
+
+
+            if($Avan && $Total){
+                echo '<script> alert("Piezas agregadas satisfactoriamente");</script>';
+                
+                redirect('Sesiones/lista/'.$Clave);
+            }
         }
     } 
+
+    //Muestra el avance de la seccion seleccionada
+    public function historial($IdProducto, $Id){
+        if($this->session->userdata('is_logued_in') == FALSE){
+            redirect('login','refresh');
+        }else{
+
+            $historial = $this->ModSesiones->Historial($IdProducto, $Id);
+
+            $data['contenido'] = 'sesiones/avance';
+            $data['lista'] = $historial;
+            $data['sesion'] = $Id;
+
+            $this->load->view('plantilla', $data);
+        }
+    }
     
 }

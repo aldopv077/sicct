@@ -8,16 +8,23 @@ class Usuarios extends CI_Controller {
         $this->load->model("ModUsuarios");
     }
 
-    
+
     //Muestra la pagina inicial de usuarios que sería para agregar usuarios
     public function index(){
         if($this->session->userdata('is_logued_in') == FALSE){
             redirect('login','refresh');
         }else{
+            $rol = $this->session->userdata('rol');
             $data['contenido'] = "usuarios/index";  // Ruta de la pantalla principal de usuarios
             $data['puestos'] = $this->ModUsuarios->selPuesto(); //Envío de los puestos para llenar la lista.
             $data['perfil'] = $this->ModUsuarios->selperfil(); //Envío de los perfiles para llenar el combo
-            $this->load->view("plantilla",$data); //Manda a llamar a la vista plantilla con los parametros antes mecionados
+            if($rol != "SuperAdmin"){
+                $this->load->view("plantilla",$data); //Manda a llamar a la vista plantilla con los parametros antes mecionados
+            }else{
+                /*print_r($data['perfil']);
+                exit;*/
+                $this->load->view("plantilladmin",$data); //Manda a llamar a la vista plantilla con los parametros antes mecionados 
+            }
         }
     }
     
@@ -26,10 +33,15 @@ class Usuarios extends CI_Controller {
         if($this->session->userdata('is_logued_in') == FALSE){
             redirect('login','refresh');
         }else{
+            $rol = $this->session->userdata('rol');
             $data['contenido'] = "usuarios/lista";
             $data['usuarios'] = $this->ModUsuarios->selUsuarios();
             $data['lUsuarios'] = $this->ModUsuarios->selUsuarios();
-            $this->load->view("plantilla",$data); 
+            if($rol != "SuperAdmin"){
+                $this->load->view("plantilla",$data); //Manda a llamar a la vista plantilla con los parametros antes mecionados
+            }else{
+                $this->load->view("plantilladmin",$data); //Manda a llamar a la vista plantilla con los parametros antes mecionados 
+            } 
         }
     }
     
@@ -39,11 +51,16 @@ class Usuarios extends CI_Controller {
             redirect('login','refresh');
         }else{
             if($Id != NULL){
+                $rol = $this->session->userdata('rol');
                 $data['contenido'] = "usuarios/modificar";  //Ruta de la pantalla de modificacion de los usuarios
                 $data['DatosUsuario'] = $this->ModUsuarios->frmModificar($Id);
                 $data['puestos'] = $this->ModUsuarios->selPuesto(); 
                 $data['perfil'] = $this->ModUsuarios->selperfil(); 
-                $this->load->view("plantilla",$data); 
+                if($rol != "SuperAdmin"){
+                    $this->load->view("plantilla",$data); //Manda a llamar a la vista plantilla con los parametros antes mecionados
+                }else{
+                    $this->load->view("plantilladmin",$data); //Manda a llamar a la vista plantilla con los parametros antes mecionados 
+                }
             }else{
                 redirect('Usuarios/index','refresh');
             }
@@ -155,12 +172,15 @@ class Usuarios extends CI_Controller {
             
             if($Id != NULL){
                 
-                
+                $rol = $this->session->userdata('rol');
                 $data['contenido'] = "usuarios/lista";  // Ruta de la pantalla principal de clientes
                 $data['usuarios'] = $this->ModUsuarios->busqueda($Id);
                 $data['lUsuarios'] = $this->ModUsuarios->selUsuarios();
-                $this->load->view("plantilla",$data); //Manda a llamar a la vista plantilla con los parametros antes mecionados
-            }
+                if($rol != "SuperAdmin"){
+                    $this->load->view("plantilla",$data); //Manda a llamar a la vista plantilla con los parametros antes mecionados
+                }else{
+                    $this->load->view("plantilladmin",$data); //Manda a llamar a la vista plantilla con los parametros antes mecionados 
+                }            }
        }
     }
     

@@ -139,11 +139,10 @@
 															$value->IdRol = 0;
 															$value->Rol = "";
 														}
-                                            ?>
-													
-                                                    <option value="<?php echo $value->IdRol ?>"><?php echo $value->Rol?></option>   
-                                            <?php
 													}
+													?>	
+														<option value="<?php echo $value->IdRol ?>"><?php echo $value->Rol?></option>   
+													<?php
                                                 }
                                             ?>
 										</select>

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-	<title><?php echo $this->session->userdata('NombreEmp')?></title>
+	<title>INICIO</title>
 
 	<!-- Normalize V8.0.1 -->
 	 <link rel="stylesheet" href="<?php echo base_url('public/css/normalize.css'); ?>">  
@@ -49,8 +49,7 @@
             }
         </script>
 </head>
-<!-- <body onload="sinVueltaAtras();" onpageshow="if (event.persisted) sinVueltaAtras();" onunload=""> -->
-<body>
+<body onload="sinVueltaAtras();" onpageshow="if (event.persisted) sinVueltaAtras();" onunload="">
 	<?php
         $Nombre = $this->session->userdata('nombre').' '. $this->session->userdata('paterno').' '. $this->session->userdata('materno');
         $Puesto = $this->session->userdata('pueston');
@@ -72,59 +71,14 @@
 				<div class="full-box nav-lateral-bar"></div>
 				<nav class="full-box nav-lateral-menu">
 					<ul>
-					
 						<li>
-							<a href="<?php echo base_url('Inicio/index'); ?>"><i class="fab fa-dashcube fa-fw"></i> &nbsp; Inicio</a>
+							<a href="<?php echo base_url('Inicio/indexadmin'); ?>"><i class="fab fa-dashcube fa-fw"></i> &nbsp; Inicio</a>
 						</li>
+
+						<li>
+							<a href="<?php echo base_url('Usuarios/index');?>" class="nav-btn-submenu"><i class="fas  fa-user-secret fa-fw"></i> &nbsp; Usuarios </a>
+						</li>						
 						
-						<?php if($Rol == 'Administrador'){?>
-							<li>
-								<a href="<?php echo base_url('Usuarios/index');?>" class="nav-btn-submenu"><i class="fas  fa-user-secret fa-fw"></i> &nbsp; Usuarios </a>
-							</li>
-
-							<?php if($this->session->userdata('rol') == 'Administrador' || $this->session->userdata('rol') == 'SuperAdmin'){?>
-								<li>
-									<a href="<?php echo base_url('Empleados/index');?>" class="nav-btn-submenu"><i class="fas fa-male"></i> &nbsp; Empleados </a>
-								</li>
-							<?php }?>
-							<li>
-								<a href="<?php echo base_url('Clientes/index'); ?>" class="nav-btn-submenu"><i class="fas fa-users fa-fw"></i> &nbsp; Clientes </a>
-							</li>						
-							
-							<li>
-								<a href="<?php echo base_url('Productos/index'); ?>" class="nav-btn-submenu"><i class="fas fa-tshirt fa-fw"></i> &nbsp; Producto </a>
-							</li>
-							
-							<li>
-								<a href="<?php echo base_url('Talleres/index'); ?>" class="nav-btn-submenu"><i class="fas fa-user-clock fa-fw"></i> &nbsp; Trabajadores Externos</a>
-							</li>
-							<li>
-								<a href="<?php echo base_url('Accesorios/index');?>" class="nav-btn-submenu"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; Accesorios</a>
-							</li>
-							
-							<li>
-								<a href="#" class="nav-btn-submenu1"><i class="fas fa-cogs fa-fw"></i> &nbsp; Producción <i class="fas fa-chevron-down"></i></a>
-								<ul>
-									<li>
-										<a href="#"><i class="fas fa-plus fa-fw"></i> &nbsp; Agregar item</a>
-									</li>
-									<li>
-										<a href="<?php echo base_url('Produccion/index'); ?>"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; Productos en proceso</a>
-									</li>
-									<li>
-										<a href="<?php echo base_url('Sesiones/lista'); ?>"><i class="fas fa-search fa-fw"></i> &nbsp; Secciones</a>
-									</li>
-								</ul>
-							</li>
-							<li>
-								<a href="<?php echo base_url('ProduccionInt/index'); ?>" class="nav-btn-submenu"><i class="far fa-object-group"></i> &nbsp; Producción Interna</a>
-							</li>
-						<?php }else{?>
-							<li>
-								<a href="<?php echo base_url('ProduccionInt/index'); ?>" class="nav-btn-submenu"><i class="far fa-object-group"></i> &nbsp; Producción Interna</a>
-							</li>
-						<?php }?>
-
 						<?php if($Rol == 'SuperAdmin'){?>
 							<li>
 								<a href="<?php echo base_url('Empresas/index')?>"><i class="fas fa-store-alt fa-fw"></i> &nbsp; Empresa</a>

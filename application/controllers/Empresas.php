@@ -8,6 +8,7 @@ class Empresas extends CI_Controller {
         parent::__construct();
         $this->load->model("ModEmpresas");
         $this->load->model("ModUsuarios");
+        $this->load->model("ModTalleres");
     }
 
     public function index(){
@@ -17,7 +18,12 @@ class Empresas extends CI_Controller {
             $data['contenido'] = "empresas/index";  // Ruta de la pantalla principal de empresas
             $data['puestos'] = $this->ModUsuarios->selPuesto(); //Envío de los puestos para llenar la lista.
             $data['perfil'] = $this->ModUsuarios->selperfil(); //Envío de los perfiles para llenar el combo
-            $this->load->view("plantilla",$data); //Manda a llamar a la vista plantilla con los parametros antes mecionados
+            
+            if($this->session->userdata('rol') != "SuperAdmin"){
+                $this->load->view("plantilla",$data); //Manda a llamar a la vista plantilla con los parametros antes mecionados       
+            }else{
+                $this->load->view("plantilladmin",$data);
+            }
         }
     }
 
@@ -64,6 +70,8 @@ class Empresas extends CI_Controller {
                     $Pass=trim($Pass);
 
                     $agregar = $this->ModUsuarios->AgregarUsuario($IdEmpresa, $Nombre, $Paterno, $Materno,$Telefono,$Direccion,$Puesto,$Usuario,$Email, $Pass, $Rol);
+
+                    $ingTaller=$this->ModTalleres->ingresar($IdEmpresa, $datos['empresa_nombre'], 'Matríz', ' ', $Direccion, $Telefono);
         
                     if($agregar){
                         echo '<script> alert("Empresa agregada satisfactoriamente");</script>';
